@@ -1,0 +1,49 @@
+{
+  "project_info": {
+    "project_number": "43432258096",
+    "firebase_url": "https://infit-86db2-default-rtdb.firebaseio.com",
+    "project_id": "infit-86db2",
+    "storage_bucket": "infit-86db2.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:43432258096:android:3aaf8b3525f10a6e0b9bf5",
+        "android_client_info": {
+          "package_name": "com.example.ehr_app"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCnt0V-9EYLuyBgO6rctDIQzpOMq8JrteQ"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    },
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:43432258096:android:a9268e9eb5b75ddd0b9bf5",
+        "android_client_info": {
+          "package_name": "com.example.flutter_application_main"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCnt0V-9EYLuyBgO6rctDIQzpOMq8JrteQ"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

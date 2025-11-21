@@ -1,199 +1,186 @@
 import 'package:flutter/material.dart';
-import 'package:qr_flutter/qr_flutter.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:qr_flutter/qr_flutter.dart';
 
-import '../models/prescription_model.dart';
-import '../services/prescription_service.dart';
-
-class PrescriptionDetailScreen extends StatefulWidget {
+class PrescriptionDetailScreen extends StatelessWidget {
   final String prescriptionId;
 
-  const PrescriptionDetailScreen({
-    super.key,
-    required this.prescriptionId,
-  });
-
-  @override
-  State<PrescriptionDetailScreen> createState() =>
-      _PrescriptionDetailScreenState();
-}
-
-class _PrescriptionDetailScreenState extends State<PrescriptionDetailScreen> {
-  final _service = PrescriptionService();
-
-  Prescription? _data;
-  bool _loading = true;
-
-  @override
-  void initState() {
-    super.initState();
-    _load();
-  }
-
-  Future<void> _load() async {
-    final result = await _service.getPrescription(widget.prescriptionId);
-
-    setState(() {
-      _data = result;
-      _loading = false;
-    });
-  }
+  const PrescriptionDetailScreen({super.key, required this.prescriptionId});
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        title: const Text("Chi tiết đơn thuốc"),
-      ),
+      appBar: AppBar(title: const Text("Chi tiết đơn thuốc")),
+      body: FutureBuilder<DocumentSnapshot>(
+        future: FirebaseFirestore.instance
+            .collection("prescriptions")
+            .doc(prescriptionId)
+            .get(),
+        builder: (context, snap) {
+          if (!snap.hasData) {
+            return const Center(child: CircularProgressIndicator());
+          }
 
-      body: _loading
-          ? const Center(child: CircularProgressIndicator())
-          : _data == null
-              ? const Center(child: Text("Không tìm thấy đơn thuốc"))
-              : _buildContent(),
-    );
-  }
+          final data = snap.data!.data() as Map<String, dynamic>;
 
-  Widget _buildContent() {
-    final p = _data!;
+          final List drugs = data["drugs"] ?? [];
+          final Timestamp ts = data["createdAt"];
+          final DateTime date = ts.toDate();
 
-    return SingleChildScrollView(
-      padding: const EdgeInsets.all(20),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          // ===========================
-          // THÔNG TIN CHUNG
-          // ===========================
-          Text(
-            "Mã đơn thuốc: ${p.id}",
-            style: const TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
-          ),
-
-          const SizedBox(height: 8),
-          Text("Chuẩn đoán: ${p.diagnosis}"),
-          Text("Bác sĩ ID: ${p.doctorId}"),
-          Text("Bệnh nhân ID: ${p.patientId}"),
-          const SizedBox(height: 8),
-
-          _buildStatusChip(p.status),
-
-          const SizedBox(height: 20),
-
-          // ===========================
-          // DANH SÁCH THUỐC
-          // ===========================
-          const Text(
-            "Danh sách thuốc",
-            style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
-          ),
-
-          const SizedBox(height: 10),
-
-          ...p.drugs.map(_buildDrugItem),
-
-          const SizedBox(height: 30),
-
-          // ===========================
-          // QR CODE
-          // ===========================
-          Center(
+          return SingleChildScrollView(
+            padding: const EdgeInsets.all(20),
             child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                const Text(
-                  "QR xác minh đơn thuốc",
-                  style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+                // ===============================
+                // BÁC SĨ KÊ ĐƠN
+                // ===============================
+                FutureBuilder<DocumentSnapshot>(
+                  future: FirebaseFirestore.instance
+                      .collection("users")
+                      .doc(data["doctorId"])
+                      .get(),
+                  builder: (context, doctorSnap) {
+                    if (!doctorSnap.hasData) {
+                      return const Text(
+                        "Bác sĩ kê đơn: ...",
+                        style: TextStyle(fontSize: 18),
+                      );
+                    }
+
+                    final doctor =
+                        doctorSnap.data!.data() as Map<String, dynamic>;
+                    return Text(
+                      "Bác sĩ kê đơn: ${doctor["displayName"] ?? "Không rõ"}",
+                      style: const TextStyle(fontSize: 18),
+                    );
+                  },
                 ),
+
+                const SizedBox(height: 10),
+
+                // ===============================
+                // NGÀY KÊ ĐƠN
+                // ===============================
+                Text(
+                  "Ngày kê: ${date.day}/${date.month}/${date.year}  "
+                  "${date.hour}:${date.minute.toString().padLeft(2, '0')}",
+                  style: const TextStyle(fontSize: 16),
+                ),
+
+                const SizedBox(height: 20),
+
+                // ===============================
+                // DANH SÁCH THUỐC
+                // ===============================
+                const Text(
+                  "Danh sách thuốc",
+                  style: TextStyle(
+                    fontSize: 20,
+                    fontWeight: FontWeight.bold,
+                  ),
+                ),
+
                 const SizedBox(height: 12),
 
-                QrImageView(
-                  data: p.qrCode,
-                  size: 180,
-                  backgroundColor: Colors.white,
+                ...drugs.map((drug) => _drugCard(drug)).toList(),
+
+                const SizedBox(height: 30),
+
+                // ===============================
+                // QR XÁC MINH
+                // ===============================
+                const Text(
+                  "QR Xác minh đơn thuốc",
+                  style: TextStyle(
+                    fontSize: 20,
+                    fontWeight: FontWeight.bold,
+                  ),
                 ),
 
-                const SizedBox(height: 8),
-                Text(
-                  "Quét QR tại nhà thuốc để nhận thuốc",
-                  style: TextStyle(color: Colors.grey[700]),
+                const SizedBox(height: 12),
+
+                Center(
+                  child: QrImageView(
+                    data: prescriptionId,
+                    version: QrVersions.auto,
+                    size: 220,
+                  ),
                 ),
               ],
             ),
-          ),
-
-          const SizedBox(height: 40),
-        ],
+          );
+        },
       ),
     );
   }
 
-  // ===========================
-  // 1 thuốc trong danh sách
-  // ===========================
-  Widget _buildDrugItem(MedicalDrug drug) {
+  // =======================================================
+  // HIỂN THỊ 1 LOẠI THUỐC CHI TIẾT ĐẸP – CHUẨN Y TẾ
+  // =======================================================
+  Widget _drugCard(Map drug) {
+    // Build uống sáng – trưa – tối
+    List<String> times = [];
+    if (drug["morning"] == true) times.add("sáng");
+    if (drug["noon"] == true) times.add("trưa");
+    if (drug["evening"] == true) times.add("tối");
+
+    final frequency = times.isEmpty ? "Không rõ" : times.join(" • ");
+
     return Container(
-      margin: const EdgeInsets.only(bottom: 12),
-      padding: const EdgeInsets.all(14),
+      padding: const EdgeInsets.all(16),
+      margin: const EdgeInsets.only(bottom: 14),
       decoration: BoxDecoration(
-        color: Colors.blue.shade50,
+        color: Colors.white,
         borderRadius: BorderRadius.circular(12),
-        border: Border.all(color: Colors.blue.shade200),
+        boxShadow: [
+          BoxShadow(
+            color: Colors.black.withOpacity(0.05),
+            blurRadius: 8,
+            offset: const Offset(0, 3),
+          )
+        ],
       ),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
+          // Tên thuốc + hàm lượng
           Text(
-            drug.name,
-            style: const TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
+            "${drug["name"]} (${drug["dosage"]})",
+            style: const TextStyle(
+              fontSize: 18,
+              fontWeight: FontWeight.bold,
+            ),
           ),
+
+          const SizedBox(height: 6),
+
+          // Số ngày sử dụng
+          if (drug["duration"] != null)
+            Text(
+              "Thời gian sử dụng: ${drug["duration"]} ngày",
+              style: const TextStyle(fontSize: 15),
+            ),
+
           const SizedBox(height: 4),
-          Text("Liều lượng: ${drug.dosage}"),
-          Text("Hướng dẫn: ${drug.instructions}"),
+
+          // Uống sáng – trưa – tối
+          Text(
+            "Uống: $frequency",
+            style: const TextStyle(fontSize: 15),
+          ),
+
+          const SizedBox(height: 4),
+
+          // Hướng dẫn sử dụng
+          if (drug["instructions"] != null &&
+              drug["instructions"].toString().trim().isNotEmpty)
+            Text(
+              "Hướng dẫn: ${drug["instructions"]}",
+              style: const TextStyle(fontSize: 15),
+            ),
         ],
       ),
     );
   }
-
-  // ===========================
-  // CHIP TRẠNG THÁI
-  // ===========================
-  Widget _buildStatusChip(String status) {
-    Color color;
-    String label;
-
-    switch (status) {
-      case "pending":
-        color = Colors.orange;
-        label = "Chưa phát thuốc";
-        break;
-      case "dispensed":
-        color = Colors.green;
-        label = "Đã phát thuốc";
-        break;
-      default:
-        color = Colors.grey;
-        label = "Không xác định";
-    }
-
-    return Chip(
-      label: Text(label),
-      backgroundColor: color.withOpacity(0.2),
-      labelStyle: TextStyle(color: color, fontWeight: FontWeight.bold),
-    );
-  }
-  ElevatedButton(
-  onPressed: () {
-    Navigator.push(
-      context,
-      MaterialPageRoute(
-        builder: (_) => PrescriptionQRScreen(
-          prescriptionId: p.id,
-          qrData: p.qrCode,
-        ),
-      ),
-    );
-  },
-  child: const Text("Xem QR"),
-)
-
 }

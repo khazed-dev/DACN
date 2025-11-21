@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import '../../health_notes/screens/health_notes_screen.dart';
 import '../../treatment_plan/screens/patient_treatment_plan_list_screen.dart';
+import '../../prescriptions/screens/patient_prescription_list_screen.dart';
 
 class PatientHomeScreen extends StatelessWidget {
   final String patientId;
@@ -142,11 +143,15 @@ class PatientHomeScreen extends StatelessWidget {
                   icon: Icons.qr_code_2,
                   color: Colors.deepPurple,
                   onTap: () {
-                    ScaffoldMessenger.of(context).showSnackBar(
-                      const SnackBar(content: Text("Module 3 đang phát triển...")),
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                        builder: (_) => PatientPrescriptionListScreen(patientId: patientId),
+                      ),
                     );
                   },
                 ),
+
 
                 // --- Appointments ---
                 _menuCard(

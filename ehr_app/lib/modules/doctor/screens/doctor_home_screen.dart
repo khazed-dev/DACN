@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 
 class DoctorHomeScreen extends StatefulWidget {
   final String doctorId;
@@ -42,10 +43,51 @@ class _DoctorHomeScreenState extends State<DoctorHomeScreen> {
     }
 
     return Scaffold(
-      appBar: AppBar(
-        title: const Text("Doctor Dashboard"),
-      ),
+        appBar: AppBar(
+          title: const Text("Doctor Dashboard"),
+          actions: [
+            IconButton(
+              icon: const Icon(Icons.logout, size: 22),
+              tooltip: "Đăng xuất",
+              onPressed: () async {
+                // Xác nhận đăng xuất
+                final confirm = await showDialog(
+                  context: context,
+                  builder: (context) {
+                    return AlertDialog(
+                      title: const Text("Đăng xuất"),
+                      content: const Text("Bạn có chắc muốn đăng xuất không?"),
+                      actions: [
+                        TextButton(
+                          onPressed: () => Navigator.pop(context, false),
+                          child: const Text("Hủy"),
+                        ),
+                        TextButton(
+                          onPressed: () => Navigator.pop(context, true),
+                          child: const Text("Đăng xuất"),
+                        ),
+                      ],
+                    );
+                  },
+                );
 
+                if (confirm != true) return;
+
+                // Thực hiện đăng xuất Firebase
+                await FirebaseAuth.instance.signOut();
+
+                // Quay về màn hình login
+                if (mounted) {
+                  Navigator.pushNamedAndRemoveUntil(
+                    context,
+                    "/login",
+                    (route) => false,
+                  );
+                }
+              },
+            ),
+          ],
+        ),
       body: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [

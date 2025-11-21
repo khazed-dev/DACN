@@ -8,6 +8,10 @@ class PrescriptionService {
   /// ========================
   /// 🧑‍⚕️ BÁC SĨ TẠO ĐƠN THUỐC
   /// ========================
+  Future<void> deletePrescription(String id) async {
+  await _collection.doc(id).delete();
+}
+
   Future<void> createPrescription(Prescription prescription) async {
     final docRef = _collection.doc();
 
@@ -64,4 +68,14 @@ class PrescriptionService {
       'updatedAt': FieldValue.serverTimestamp(),
     });
   }
+
+    /// Cập nhật đơn thuốc
+  Future<void> updatePrescription(Prescription p) async {
+    await _collection.doc(p.prescriptionId).update({
+      "prescriptionName": p.prescriptionName,
+      "drugs": p.drugs.map((d) => d.toMap()).toList(),
+      "updatedAt": FieldValue.serverTimestamp(),
+    });
+  }
+
 }

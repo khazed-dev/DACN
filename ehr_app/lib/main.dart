@@ -13,18 +13,19 @@ import 'modules/treatment_plan/screens/create_treatment_plan_screen.dart';
 import 'modules/treatment_plan/screens/treatment_plan_detail_screen.dart';
 
 // PHARMACY
-import 'modules/prescriptions/screens/pharmacy_scan_screen.dart';
-
+import 'modules/pharmacy/screens/pharmacy_scan_screen.dart';
+import 'modules/pharmacy/screens/pharmacy_verify_screen.dart';
+import 'modules/pharmacy/screens/pharmacy_home_screen.dart';
+import 'modules/pharmacy/screens/pharmacy_history_screen.dart';
 // PATIENT
 import 'modules/patient/screens/patient_details_screen.dart';
-import 'modules/patient/screens/patient_home_screen.dart';
 
 // DOCTOR
 import 'modules/doctor/screens/doctor_patient_details_screen.dart';
-import 'modules/doctor/screens/doctor_home_screen.dart';
 import 'modules/prescriptions/screens/doctor_prescription_list_screen.dart';
 import 'modules/prescriptions/screens/create_prescription_screen.dart';
-
+import 'modules/prescriptions/screens/prescription_detail_screen.dart';
+import 'modules/prescriptions/screens/edit_prescription_screen.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -47,12 +48,15 @@ class MyApp extends StatelessWidget {
         // MODULE 1
         "/health-notes": (_) => const EditHealthNotesScreen(),
 
-        // DOCTOR
+        // DOCTOR ROUTES
         "/doctor/patient-details": (_) => const DoctorPatientDetailsScreen(),
 
         "/doctor/prescriptions": (context) {
-          final doctorId = ModalRoute.of(context)!.settings.arguments as String;
-          return DoctorPrescriptionListScreen(doctorId: doctorId);
+          final args = ModalRoute.of(context)!.settings.arguments as Map;
+          return DoctorPrescriptionListScreen(
+            doctorId: args["doctorId"],
+            patientId: args["patientId"],
+          );
         },
 
         "/doctor/prescription/create": (context) {
@@ -63,14 +67,39 @@ class MyApp extends StatelessWidget {
           );
         },
 
+        "/doctor/prescription/detail": (context) {
+          final id = ModalRoute.of(context)!.settings.arguments as String;
+          return PrescriptionDetailScreen(prescriptionId: id);
+        },
+
+        "/doctor/treatment-plans": (context) {
+          final args = ModalRoute.of(context)!.settings.arguments as Map;
+          return TreatmentPlanListScreen(patientId: args["patientId"]);
+        },
+
+        "/doctor/prescription/edit": (context) {
+          final args = ModalRoute.of(context)!.settings.arguments as Map;
+          return EditPrescriptionScreen(
+            prescriptionId: args["prescriptionId"],
+          );
+        },
+
         // PHARMACY
-        "/pharmacy/scan": (_) => const PharmacyScanScreen(),
+        "/pharmacy/home": (context) {
+          final args = ModalRoute.of(context)!.settings.arguments as Map;
+          return PharmacyHomeScreen(pharmacistId: args["pharmacistId"]);
+        },
+
+        "/pharmacy/scan": (context) {
+          final args = ModalRoute.of(context)!.settings.arguments as Map;
+          return PharmacyScanScreen(pharmacistId: args["pharmacistId"]);
+        },
+        "/pharmacy/history": (context) {
+          final args = ModalRoute.of(context)!.settings.arguments as Map;
+          return PharmacyHistoryScreen(pharmacistId: args["pharmacistId"]);
+        },
 
         // PATIENT
-        "/patient/home": (context) {
-          final patientId = ModalRoute.of(context)!.settings.arguments as String;
-          return PatientHomeScreen(patientId: patientId);
-        },
         "/patient/details": (_) => const PatientDetailsScreen(),
       },
 

@@ -12,7 +12,6 @@ class Prescription {
   final DateTime? updatedAt;
 
   final String qrCode;
-
   final String? pharmacistId;
   final DateTime? dispensedAt;
 
@@ -96,5 +95,5 @@ class Prescription {
       pharmacistId: pharmacistId ?? this.pharmacistId,
       dispensedAt: dispensedAt ?? this.dispensedAt,
     );
-  }
+  } 
 }

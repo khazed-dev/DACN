@@ -2,30 +2,36 @@ import 'package:flutter/material.dart';
 import 'package:firebase_core/firebase_core.dart';
 
 import 'firebase_options.dart';
-import 'modules/auth/screens/auth_gate.dart';
+import 'screens/auth/auth_gate.dart';
 
-// MODULE 1
-import 'modules/health_notes/screens/edit_health_notes_screen.dart';
+// SCREENS - AUTH
+import 'screens/auth/login_screen.dart';
 
-// MODULE 2
-import 'modules/treatment_plan/screens/treatment_plan_list_screen.dart';
-import 'modules/treatment_plan/screens/create_treatment_plan_screen.dart';
-import 'modules/treatment_plan/screens/treatment_plan_detail_screen.dart';
+// SCREENS - HEALTH NOTES
+import 'screens/patient/edit_health_notes_screen.dart';
 
-// PHARMACY
-import 'modules/pharmacy/screens/pharmacy_scan_screen.dart';
-import 'modules/pharmacy/screens/pharmacy_verify_screen.dart';
-import 'modules/pharmacy/screens/pharmacy_home_screen.dart';
-import 'modules/pharmacy/screens/pharmacy_history_screen.dart';
-// PATIENT
-import 'modules/patient/screens/patient_details_screen.dart';
+// SCREENS - TREATMENT PLANS
+import 'screens/doctor/treatment_plan_list_screen.dart';
+import 'screens/doctor/create_treatment_plan_screen.dart';
+import 'screens/doctor/treatment_plan_detail_screen.dart';
+import 'screens/patient/patient_treatment_plan_list_screen.dart';
 
-// DOCTOR
-import 'modules/doctor/screens/doctor_patient_details_screen.dart';
-import 'modules/prescriptions/screens/doctor_prescription_list_screen.dart';
-import 'modules/prescriptions/screens/create_prescription_screen.dart';
-import 'modules/prescriptions/screens/prescription_detail_screen.dart';
-import 'modules/prescriptions/screens/edit_prescription_screen.dart';
+// SCREENS - PHARMACY
+import 'screens/pharmacy/pharmacy_scan_screen.dart';
+import 'screens/pharmacy/pharmacy_verify_screen.dart';
+import 'screens/pharmacy/pharmacy_home_screen.dart';
+import 'screens/pharmacy/pharmacy_history_screen.dart';
+
+// SCREENS - PATIENT
+import 'screens/patient/patient_details_screen.dart';
+import 'screens/patient/patient_home_screen.dart';
+
+// SCREENS - DOCTOR
+import 'screens/doctor/doctor_patient_details_screen.dart';
+import 'screens/doctor/doctor_prescription_list_screen.dart';
+import 'screens/doctor/create_prescription_screen.dart';
+import 'screens/common/prescription_detail_screen.dart';
+import 'screens/doctor/edit_prescription_screen.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();

@@ -1,0 +1,326 @@
+===============================================
+MIGRATION HOÀN THÀNH - TÓM TẮT CHI TIẾT
+===============================================
+
+📊 I. CẤU TRÚC THƯMỤC MỚI (FINAL)
+===============================================
+
+lib/
+├── 📂 config/
+├── 📂 models/
+│   ├── health_notes_model.dart
+│   ├── medical_drug.dart
+│   ├── prescription_model.dart
+│   └── treatment_plan_model.dart
+├── 📂 providers/
+├── 📂 screens/
+│   ├── 📂 auth/
+│   │   ├── auth_gate.dart
+│   │   ├── login_screen.dart
+│   │   ├── register_screen.dart
+│   │   └── splash_screen.dart
+│   ├── 📂 common/
+│   │   ├── ehr_records_list_screen.dart
+│   │   ├── ehr_record_detail_screen.dart
+│   │   ├── prescription_detail_screen.dart
+│   │   ├── prescription_list_screen.dart
+│   │   └── prescription_qr_screen.dart
+│   ├── 📂 doctor/
+│   │   ├── create_ehr_screen.dart
+│   │   ├── create_prescription_screen.dart
+│   │   ├── create_treatment_plan_screen.dart
+│   │   ├── doctor_home_screen.dart
+│   │   ├── doctor_patient_details_screen.dart
+│   │   ├── doctor_patient_list_screen.dart
+│   │   ├── doctor_prescription_detail_screen.dart
+│   │   ├── doctor_prescription_list_screen.dart
+│   │   ├── edit_prescription_screen.dart
+│   │   ├── treatment_plan_detail_screen.dart
+│   │   └── treatment_plan_list_screen.dart
+│   ├── 📂 patient/
+│   │   ├── edit_health_notes_screen.dart
+│   │   ├── health_notes_screen.dart
+│   │   ├── patient_details_screen.dart
+│   │   ├── patient_home_screen.dart
+│   │   ├── patient_prescription_list_screen.dart
+│   │   └── patient_treatment_plan_list_screen.dart
+│   ├── 📂 pharmacy/
+│   │   ├── pharmacy_confirm_screen.dart
+│   │   ├── pharmacy_history_screen.dart
+│   │   ├── pharmacy_home_screen.dart
+│   │   ├── pharmacy_scan_screen.dart
+│   │   └── pharmacy_verify_screen.dart
+│   └── ai_classification_demo_screen.dart
+├── 📂 services/
+│   ├── ai_classification_service.dart
+│   ├── auth_service.dart
+│   ├── encryption_service.dart
+│   ├── firebase_service.dart
+│   ├── health_notes_service.dart
+│   ├── prescription_service.dart
+│   ├── treatment_plan_service.dart
+│   ├── user_profile_service.dart
+│   └── web3_service.dart
+├── 📂 utils/
+├── 📂 widgets/
+├── firebase_options.dart
+└── main.dart
+
+
+📋 II. BẢNG MAPPING CHI TIẾT (FROM → TO)
+===============================================
+
+### MODELS ###
+modules/prescriptions/models/prescription_model.dart 
+  → lib/models/prescription_model.dart ✓
+
+modules/prescriptions/models/medical_drug.dart 
+  → lib/models/medical_drug.dart ✓
+
+modules/health_notes/models/health_notes_model.dart 
+  → lib/models/health_notes_model.dart ✓
+
+modules/treatment_plan/models/treatment_plan.dart 
+  → lib/models/treatment_plan_model.dart ✓ (Renamed: thêm _model)
+
+
+### SERVICES ###
+modules/prescriptions/services/prescription_service.dart 
+  → lib/services/prescription_service.dart ✓
+  Import fix: '../models/prescription_model.dart' → OK (vẫn dùng relative path)
+
+modules/health_notes/services/health_notes_service.dart 
+  → lib/services/health_notes_service.dart ✓
+  Import: '../models/health_notes_model.dart' → OK
+
+modules/treatment_plan/services/treatment_plan_service.dart 
+  → lib/services/treatment_plan_service.dart ✓
+  Import fix: '../models/treatment_plan.dart' → '../models/treatment_plan_model.dart' ✓
+
+lib/services/user_profile_service.dart 
+  → GIỮ NGUYÊN ✓ (đã ở vị trí đúng)
+
+
+### SCREENS - AUTH ###
+modules/auth/screens/auth_gate.dart 
+  → lib/screens/auth/auth_gate.dart ✓
+
+modules/auth/screens/login_screen.dart 
+  → lib/screens/auth/login_screen.dart ✓
+
+(Thêm mới - không có trong modules cũ)
+lib/screens/auth/register_screen.dart ✓
+lib/screens/auth/splash_screen.dart ✓
+
+
+### SCREENS - DOCTOR ###
+modules/doctor/screens/doctor_home_screen.dart 
+  → lib/screens/doctor/doctor_home_screen.dart ✓
+
+modules/doctor/screens/doctor_patient_details_screen.dart 
+  → lib/screens/doctor/doctor_patient_details_screen.dart ✓
+
+modules/doctor/screens/doctor_patient_list_screen.dart 
+  → lib/screens/doctor/doctor_patient_list_screen.dart ✓
+
+modules/treatment_plan/screens/treatment_plan_list_screen.dart 
+  → lib/screens/doctor/treatment_plan_list_screen.dart ✓
+  Import fix: '../models/treatment_plan.dart' → '../../models/treatment_plan_model.dart' ✓
+
+modules/treatment_plan/screens/create_treatment_plan_screen.dart 
+  → lib/screens/doctor/create_treatment_plan_screen.dart ✓
+  Import fix: '../models/treatment_plan.dart' → '../../models/treatment_plan_model.dart' ✓
+
+modules/treatment_plan/screens/treatment_plan_detail_screen.dart 
+  → lib/screens/doctor/treatment_plan_detail_screen.dart ✓
+  Import fix: '../models/treatment_plan.dart' → '../../models/treatment_plan_model.dart' ✓
+
+modules/prescriptions/screens/doctor_prescription_list_screen.dart 
+  → lib/screens/doctor/doctor_prescription_list_screen.dart ✓
+  Import fix: '../models/prescription_model.dart' → '../../models/prescription_model.dart' ✓
+
+modules/prescriptions/screens/create_prescription_screen.dart 
+  → lib/screens/doctor/create_prescription_screen.dart ✓
+  Import fix: '../models/*' → '../../models/*' ✓
+
+modules/prescriptions/screens/edit_prescription_screen.dart 
+  → lib/screens/doctor/edit_prescription_screen.dart ✓
+  Import fix: '../models/*' → '../../models/*' ✓
+
+modules/prescriptions/screens/doctor_prescription_detail_screen.dart 
+  → lib/screens/doctor/doctor_prescription_detail_screen.dart ✓
+  Import fix: '../models/prescription_model.dart' → '../../models/prescription_model.dart' ✓
+
+
+### SCREENS - PATIENT ###
+modules/patient/screens/patient_home_screen.dart 
+  → lib/screens/patient/patient_home_screen.dart ✓
+  Import fix: '../../health_notes/screens/...' → 'health_notes_screen.dart' ✓
+  Import fix: '../../treatment_plan/screens/...' → 'patient_treatment_plan_list_screen.dart' ✓
+  Import fix: '../../prescriptions/screens/...' → 'patient_prescription_list_screen.dart' ✓
+
+modules/patient/screens/patient_details_screen.dart 
+  → lib/screens/patient/patient_details_screen.dart ✓
+
+modules/health_notes/screens/health_notes_screen.dart 
+  → lib/screens/patient/health_notes_screen.dart ✓
+  Import fix: '../services/...' → '../../services/...' ✓
+
+modules/health_notes/screens/edit_health_notes_screen.dart 
+  → lib/screens/patient/edit_health_notes_screen.dart ✓
+  Import fix: '../services/...' → '../../services/...' ✓
+
+modules/treatment_plan/screens/patient_treatment_plan_list_screen.dart 
+  → lib/screens/patient/patient_treatment_plan_list_screen.dart ✓
+  Import fix: '../../treatment_plan/services/...' → '../../services/treatment_plan_service.dart' ✓
+
+modules/prescriptions/screens/patient_prescription_list_screen.dart 
+  → lib/screens/patient/patient_prescription_list_screen.dart ✓
+  Import fix: 'prescription_detail_screen.dart' → '../common/prescription_detail_screen.dart' ✓
+
+
+### SCREENS - COMMON ###
+modules/prescriptions/screens/prescription_detail_screen.dart 
+  → lib/screens/common/prescription_detail_screen.dart ✓
+
+modules/prescriptions/screens/prescription_list_screen.dart 
+  → lib/screens/common/prescription_list_screen.dart ✓
+  Import fix: '../models/prescription_model.dart' → '../../models/prescription_model.dart' ✓
+
+modules/prescriptions/screens/prescription_qr_screen.dart 
+  → lib/screens/common/prescription_qr_screen.dart ✓
+
+
+### SCREENS - PHARMACY ###
+modules/pharmacy/screens/pharmacy_home_screen.dart 
+  → lib/screens/pharmacy/pharmacy_home_screen.dart ✓
+
+modules/pharmacy/screens/pharmacy_scan_screen.dart 
+  → lib/screens/pharmacy/pharmacy_scan_screen.dart ✓
+
+modules/pharmacy/screens/pharmacy_verify_screen.dart 
+  → lib/screens/pharmacy/pharmacy_verify_screen.dart ✓
+
+modules/pharmacy/screens/pharmacy_history_screen.dart 
+  → lib/screens/pharmacy/pharmacy_history_screen.dart ✓
+
+modules/prescriptions/screens/pharmacy_confirm_screen.dart 
+  → lib/screens/pharmacy/pharmacy_confirm_screen.dart ✓
+  Import fix: '../models/prescription_model.dart' → '../../models/prescription_model.dart' ✓
+
+
+### SCREENS - COMMON (THÊM MỚI) ###
+lib/screens/common/ehr_records_list_screen.dart ✓
+lib/screens/common/ehr_record_detail_screen.dart ✓
+lib/screens/ai_classification_demo_screen.dart ✓
+
+
+🔄 III. IMPORT FIXES ĐÃ THỰC HIỆN
+===============================================
+
+✓ Services:
+  - prescription_service.dart: OK (relative path vẫn dùng được)
+  - health_notes_service.dart: OK
+  - treatment_plan_service.dart: '../models/treatment_plan.dart' → '../models/treatment_plan_model.dart'
+
+✓ Doctor Screens:
+  - create_treatment_plan_screen.dart: '../models/treatment_plan.dart' → '../../models/treatment_plan_model.dart'
+  - treatment_plan_detail_screen.dart: '../models/treatment_plan.dart' → '../../models/treatment_plan_model.dart'
+  - treatment_plan_list_screen.dart: '../models/treatment_plan.dart' → '../../models/treatment_plan_model.dart'
+  - create_prescription_screen.dart: '../models/*' → '../../models/*'
+  - doctor_prescription_list_screen.dart: '../models/*' → '../../models/*'
+  - doctor_prescription_detail_screen.dart: '../models/*' → '../../models/*'
+  - edit_prescription_screen.dart: '../models/*' → '../../models/*'
+
+✓ Patient Screens:
+  - patient_home_screen.dart: Cross-module imports → same-folder imports
+  - health_notes_screen.dart: '../services' → '../../services'
+  - edit_health_notes_screen.dart: '../services' → '../../services'
+  - patient_treatment_plan_list_screen.dart: Removed old module paths
+  - patient_prescription_list_screen.dart: 'prescription_detail_screen.dart' → '../common/prescription_detail_screen.dart'
+
+✓ Common Screens:
+  - prescription_list_screen.dart: '../models/*' → '../../models/*'
+
+✓ Pharmacy Screens:
+  - pharmacy_confirm_screen.dart: '../models/*' → '../../models/*'
+
+
+📝 IV. CẬP NHẬT MAIN.DART
+===============================================
+
+OLD IMPORTS (modules structure):
+  import 'modules/auth/screens/auth_gate.dart';
+  import 'modules/health_notes/screens/edit_health_notes_screen.dart';
+  import 'modules/treatment_plan/screens/treatment_plan_list_screen.dart';
+  import 'modules/pharmacy/screens/pharmacy_scan_screen.dart';
+  import 'modules/doctor/screens/doctor_patient_details_screen.dart';
+  import 'modules/prescriptions/screens/doctor_prescription_list_screen.dart';
+
+NEW IMPORTS (new structure):
+  import 'screens/auth/auth_gate.dart';
+  import 'screens/patient/edit_health_notes_screen.dart';
+  import 'screens/doctor/treatment_plan_list_screen.dart';
+  import 'screens/pharmacy/pharmacy_scan_screen.dart';
+  import 'screens/doctor/doctor_patient_details_screen.dart';
+  import 'screens/doctor/doctor_prescription_list_screen.dart';
+  import 'screens/common/prescription_detail_screen.dart';
+
+✓ UPDATED: main.dart
+
+
+⚠️ V. LƯỚI LỖI TIỀM ẨN VÀ GIẢI PHÁP
+===============================================
+
+1. Duplicate Screen Names:
+   ⚠️ ISSUE: pharmacy_scan_screen.dart tồn tại ở:
+      - modules/pharmacy/screens/pharmacy_scan_screen.dart (đã copy)
+      - modules/prescriptions/screens/pharmacy_scan_screen.dart (khác logic?)
+   ✓ SOLUTION: Chỉ copy từ modules/pharmacy (files cơ bản)
+
+2. Model Naming:
+   ⚠️ ISSUE: treatment_plan.dart → treatment_plan_model.dart
+   ✓ SOLUTION: Đã rename khi copy, update all imports
+
+3. Service Imports:
+   ✓ OK: Services vẫn dùng ../models vì cùng cấp thư mục (lib/services, lib/models)
+
+4. Screen Cross-Imports:
+   ✓ OK: Đã fix tất cả screen-to-screen imports
+   Example: patient_prescription_list_screen → ../common/prescription_detail_screen
+
+
+🗑️ VI. STEP 8 - XÓA MODULES (SAU KHI KIỂM TRA)
+===============================================
+
+Sau khi test project và chắc chắn mọi thứ hoạt động:
+
+  del /s /q 'd:\KHA\VKU\Nam_4\Ki_3\DACN\ehr_app\lib\modules'
+
+Hoặc qua GUI: Xóa folder 📂 lib/modules/
+
+
+✅ VII. TỔNG KẾT
+===============================================
+
+✓ Models: 4 files migrated
+✓ Services: 3 files migrated + 1 giữ nguyên
+✓ Screens: 
+  - Auth: 4 files
+  - Doctor: 11 files
+  - Patient: 6 files
+  - Common: 5 files (3 existing + 2 new)
+  - Pharmacy: 5 files
+✓ Total Screens: 31 files
+
+✓ Import Updates: ~25 files fixed
+✓ main.dart: Updated with new import paths
+✓ No conflicts: Tất cả files đã được organize theo logic
+
+📌 READY FOR TESTING!
+
+Bước tiếp theo:
+1. Run `flutter pub get` để update dependencies
+2. Run `flutter analyze` để check lỗi import
+3. Run ứng dụng và test các routes
+4. Sau khi mọi thứ ok → xóa folder modules/

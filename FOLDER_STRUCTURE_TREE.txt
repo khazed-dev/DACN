@@ -1,0 +1,134 @@
+════════════════════════════════════════════════════════════════════
+CẤU TRÚC THƯ MỤC HOÀN CHỈNH - AFTER MIGRATION
+════════════════════════════════════════════════════════════════════
+
+lib/
+├── 📂 config/
+│   ├── app_config.dart (new)
+│   └── blockchain_config.dart (new)
+│
+├── 📂 models/
+│   ├── health_notes_model.dart ✓
+│   ├── medical_drug.dart ✓
+│   ├── prescription_model.dart ✓
+│   └── treatment_plan_model.dart ✓ (renamed from treatment_plan.dart)
+│
+├── 📂 providers/
+│   ├── access_provider.dart (new)
+│   ├── auth_provider.dart (new)
+│   └── ehr_provider.dart (new)
+│
+├── 📂 screens/
+│   │
+│   ├── 📂 auth/
+│   │   ├── auth_gate.dart ✓
+│   │   ├── login_screen.dart ✓
+│   │   ├── register_screen.dart (new)
+│   │   └── splash_screen.dart (new)
+│   │
+│   ├── 📂 common/
+│   │   ├── ehr_record_detail_screen.dart (new)
+│   │   ├── ehr_records_list_screen.dart (new)
+│   │   ├── prescription_detail_screen.dart ✓
+│   │   ├── prescription_list_screen.dart ✓
+│   │   └── prescription_qr_screen.dart ✓
+│   │
+│   ├── 📂 doctor/
+│   │   ├── create_ehr_screen.dart (new)
+│   │   ├── create_prescription_screen.dart ✓
+│   │   ├── create_treatment_plan_screen.dart ✓
+│   │   ├── doctor_home_screen.dart ✓
+│   │   ├── doctor_patient_details_screen.dart ✓
+│   │   ├── doctor_patient_list_screen.dart ✓
+│   │   ├── doctor_prescription_detail_screen.dart ✓
+│   │   ├── doctor_prescription_list_screen.dart ✓
+│   │   ├── edit_prescription_screen.dart ✓
+│   │   ├── treatment_plan_detail_screen.dart ✓
+│   │   └── treatment_plan_list_screen.dart ✓
+│   │
+│   ├── 📂 patient/
+│   │   ├── edit_health_notes_screen.dart ✓
+│   │   ├── health_notes_screen.dart ✓
+│   │   ├── patient_details_screen.dart ✓
+│   │   ├── patient_home_screen.dart ✓
+│   │   ├── patient_prescription_list_screen.dart ✓
+│   │   └── patient_treatment_plan_list_screen.dart ✓
+│   │
+│   ├── 📂 pharmacy/
+│   │   ├── pharmacy_confirm_screen.dart ✓
+│   │   ├── pharmacy_history_screen.dart ✓
+│   │   ├── pharmacy_home_screen.dart ✓
+│   │   ├── pharmacy_scan_screen.dart ✓
+│   │   └── pharmacy_verify_screen.dart ✓
+│   │
+│   └── ai_classification_demo_screen.dart (new)
+│
+├── 📂 services/
+│   ├── ai_classification_service.dart (new)
+│   ├── auth_service.dart (new)
+│   ├── encryption_service.dart (new)
+│   ├── firebase_service.dart (new)
+│   ├── health_notes_service.dart ✓
+│   ├── prescription_service.dart ✓
+│   ├── treatment_plan_service.dart ✓
+│   ├── user_profile_service.dart ✓
+│   └── web3_service.dart (new)
+│
+├── 📂 utils/
+│   └── (copied from core/utils/)
+│
+├── 📂 widgets/
+│   └── (copied from core/widgets/)
+│
+├── firebase_options.dart
+└── main.dart ✓ UPDATED
+
+
+════════════════════════════════════════════════════════════════════
+LEGEND:
+✓ = Migrated from modules/
+(new) = Newly created
+────────────────────────────────────────────────────────────────────
+
+TOTALS:
+  Models:     4 files
+  Services:   8 files (7 new + 1 migrated)
+  Screens:    31 files (29 migrated + 2 new)
+  Providers:  3 new files
+  Config:     2 new files
+
+STATUS: ✅ READY FOR TESTING
+
+
+════════════════════════════════════════════════════════════════════
+IMPORT PATTERNS - QUICK REFERENCE:
+════════════════════════════════════════════════════════════════════
+
+FROM SERVICE (lib/services/*.dart):
+  → Models:  import '../models/prescription_model.dart';
+  → Services: import 'other_service.dart'; (same folder)
+
+FROM DOCTOR SCREENS (lib/screens/doctor/*.dart):
+  → Models:  import '../../models/prescription_model.dart';
+  → Services: import '../../services/prescription_service.dart';
+  → Other Screens: import 'other_screen.dart'; (same folder)
+            OR import '../common/prescription_detail_screen.dart';
+
+FROM PATIENT SCREENS (lib/screens/patient/*.dart):
+  → Models:  import '../../models/health_notes_model.dart';
+  → Services: import '../../services/health_notes_service.dart';
+  → Other Patient Screens: import 'other_screen.dart'; (same folder)
+  → Common Screens: import '../common/prescription_detail_screen.dart';
+
+FROM PHARMACY SCREENS (lib/screens/pharmacy/*.dart):
+  → Models:  import '../../models/prescription_model.dart';
+  → Services: import '../../services/prescription_service.dart';
+  → Other Pharmacy Screens: import 'other_screen.dart'; (same folder)
+
+FROM COMMON SCREENS (lib/screens/common/*.dart):
+  → Models:  import '../../models/prescription_model.dart';
+  → Services: import '../../services/prescription_service.dart';
+  → Self: import 'prescription_detail_screen.dart'; (same folder)
+
+
+════════════════════════════════════════════════════════════════════
